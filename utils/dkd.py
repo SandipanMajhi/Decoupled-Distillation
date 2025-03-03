@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class DKD(nn.Module):
-    def __init__(self, student, teacher, ce_loss_weight = 0.5, temperature = 1.0, alpha = 0.5, beta = 0.5):
+    def __init__(self, student, teacher, ce_loss_weight = 0.5, temperature = 1.0, alpha = 0.5, beta = 0.5, **kwargs):
         super().__init__()
 
         self.student = student
@@ -14,6 +14,8 @@ class DKD(nn.Module):
         self.temperature = temperature
         self.alpha = alpha
         self.beta = beta
+
+        self.mode = kwargs.get('mode')
 
     def get_gt_mask(self, logits, targets):
         targets = targets.reshape(-1)
@@ -33,9 +35,9 @@ class DKD(nn.Module):
         t1 = (t * mask1).sum(dim = 1, keepdims = True)
         t2 = (t * mask2).sum(dim = 1, keepdims = True)
         return torch.cat([t1, t2], dim = 1)
+    
 
-
-    def dkd_loss(self, logits_student, logits_teacher, targets, alpha, beta, temperature):
+    def tckd_loss(self, logits_student, logits_teacher, targets, temperature):
         gt_mask = self.get_gt_mask(logits_student, targets)
         other_mask = self.get_other_mask(logits_student, targets)
 
@@ -48,12 +50,45 @@ class DKD(nn.Module):
         log_pred_student = torch.log(pred_student)
         tckd_loss = F.kl_div(log_pred_student, pred_teacher, size_average=False) * (temperature**2) / targets.shape[0]
 
+        return tckd_loss
+    
+    def nckd_loss(self, logits_student, logits_teacher, targets, temperature):
+        gt_mask = self.get_gt_mask(logits_student, targets)
         log_pred_student2 = F.log_softmax(logits_student/temperature - 1000 * gt_mask, dim = 1)
         pred_teacher2 = F.softmax(logits_teacher/temperature - 1000 * gt_mask, dim = 1)
 
         nckd_loss = F.kl_div(log_pred_student2, pred_teacher2, size_average=False) * (temperature**2) / targets.shape[0]
 
-        return alpha * tckd_loss + beta * nckd_loss
+        return nckd_loss
+
+
+    def dkd_loss(self, logits_student, logits_teacher, targets, alpha, beta, temperature):
+        
+        if self.mode == "tckd_only":
+            return alpha * self.tckd_loss(logits_student, logits_teacher, targets, temperature)
+        elif self.mode == "nckd_only":
+            return beta * self.nckd_loss(logits_student, logits_teacher, targets, temperature)
+        else:
+            return alpha * self.tckd_loss(logits_student, logits_teacher, targets, temperature) + beta * self.nckd_loss(logits_student, logits_teacher, targets, temperature)
+
+        # gt_mask = self.get_gt_mask(logits_student, targets)
+        # other_mask = self.get_other_mask(logits_student, targets)
+
+        # pred_student = F.softmax(logits_student / temperature, dim = 1)
+        # pred_teacher = F.softmax(logits_teacher / temperature, dim = 1)
+
+        # pred_student = self.cat_mask(pred_student, gt_mask, other_mask)
+        # pred_teacher = self.cat_mask(pred_teacher, gt_mask, other_mask)
+
+        # log_pred_student = torch.log(pred_student)
+        # tckd_loss = F.kl_div(log_pred_student, pred_teacher, size_average=False) * (temperature**2) / targets.shape[0]
+
+        # log_pred_student2 = F.log_softmax(logits_student/temperature - 1000 * gt_mask, dim = 1)
+        # pred_teacher2 = F.softmax(logits_teacher/temperature - 1000 * gt_mask, dim = 1)
+
+        # nckd_loss = F.kl_div(log_pred_student2, pred_teacher2, size_average=False) * (temperature**2) / targets.shape[0]
+
+        # return alpha * tckd_loss + beta * nckd_loss
 
 
     def forward_train(self, x, target):

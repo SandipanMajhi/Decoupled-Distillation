@@ -155,7 +155,8 @@ class DKDTrainer:
                 device = "cpu", 
                 alpha=0.5, 
                 beta=0.5, 
-                temperature=1.0):
+                temperature=1.0,
+                **kwargs):
         
         self.student = student
         self.teacher = teacher
@@ -171,8 +172,9 @@ class DKDTrainer:
         self.batch_size = batch_size
         self.root_dir = root_dir
         self.split_size = split_size
+        self.mode = kwargs.get('mode')
         
-        self.dkd = DKD(self.student, self.teacher, self.alpha, self.beta, self.temperature)
+        self.dkd = DKD(self.student, self.teacher, self.alpha, self.beta, self.temperature, mode = self.mode)
         self.dkd.to(self.device)
 
         self.student.to(self.device)
