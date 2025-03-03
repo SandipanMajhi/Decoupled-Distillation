@@ -12,6 +12,7 @@ Tested the paper on Decoupled Disitillation on ResNet 8 as student and Resnet 18
 | Experiment/Model                                      | Dataset | Num Epochs | Mode      | alpha       | Val Acc  | Test Acc | Comments                           |
 |-------------------------------------------------------|---------|------------|-----------|-------------|----------|----------|------------------------------------|
 | Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | tckd      | 1.0         | 0.8688   | 0.8422   | Overfit but 4% increase            |
+| Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | tckd      | 0.5         | 0.8476   | 0.8482   | Overfit but 4% increase            |
 
 ### Citation: 
 
