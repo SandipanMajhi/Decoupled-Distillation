@@ -8,6 +8,11 @@ Tested the paper on Decoupled Disitillation on ResNet 8 as student and Resnet 18
 | Finetuned from Scratch ResNet8 (Student)              | CIFAR10 | 50         | Adam      | 128       | 0.8014   | 0.8049   |                                    |
 | Distilled ResNet8 from ResNet18 (DKD)                 | CIFAR10 | 100        | -         | -         | 0.8766   | 0.8721   | Clear increase over the original   |
 
+### Ablation Study:
+| Experiment/Model                                      | Dataset | Num Epochs | Mode      | alpha       | Val Acc  | Test Acc | Comments                           |
+|-------------------------------------------------------|---------|------------|-----------|-------------|----------|----------|------------------------------------|
+| Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | tckd      | 1.0         | 0.8688   | 0.8422   | Overfit but 4% increase            |
+
 ### Citation: 
 
 ```
