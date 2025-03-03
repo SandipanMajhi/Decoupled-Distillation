@@ -21,7 +21,7 @@ Tested the paper on Decoupled Disitillation on ResNet 8 as student and Resnet 18
 |-------------------------------------------------------|---------|------------|-----------|-------------|----------|----------|------------------------------------|
 | Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | nckd      | 2.0         | 0.8506   | 0.8387   | 3% increase                        |
 | Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | nckd      | 4.0         | 0.8366   | 0.8295   | 3% increase                        |
-| Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | nckd      | 6.0         | 0.8418   | 0.8302   | 3% increase                        |
+| Distilled ResNet8 from ResNet18 (tckd)                 | CIFAR10 | 100       | nckd      | 8.0         | 0.8446   | 0.8317   | 3% increase                        |
 
 ### Citation: 
 
