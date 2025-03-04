@@ -5,3 +5,4 @@ pandas
 jax
 numpy
 tqdm
+matplotlib
