@@ -1,12 +1,18 @@
 # Decoupled-Distillation
 Tested the paper on Decoupled Disitillation on ResNet 8 as student and Resnet 18 as teacher model. Check the test files for usage.
 
-### Results : 
+### Results :
+##### Finetuned - 
 | Experiment/Model                                      | Dataset | Num Epochs | Optimizer | BatchSize | Val Acc  | Test Acc | Comments                           |
 |-------------------------------------------------------|---------|------------|-----------|-----------|----------|----------|------------------------------------|
 | Pretrained + Finetuned ResNet18 (Teacher)             | CIFAR10 | 50         | Adam      | 128       | 0.9122   | 0.911    |                                    |
 | Finetuned from Scratch ResNet8 (Student)              | CIFAR10 | 50         | Adam      | 128       | 0.8014   | 0.8049   |                                    |
-| Distilled ResNet8 from ResNet18 (DKD)                 | CIFAR10 | 100        | -         | -         | 0.8766   | 0.8721   | Clear increase over the original   |
+
+##### Distilled Model - Alpha 1.0 and Beta 8.0 -
+| Experiment/Model                                      | Dataset | Num Epochs | Optimizer | BatchSize | Val Acc  | Test Acc | Comments                           |
+|-------------------------------------------------------|---------|------------|-----------|-----------|----------|----------|------------------------------------|
+| Distilled ResNet8 from ResNet18 (DKD)                 | CIFAR10 | 100        | Adam      | 128       | 0.8766   | 0.8721   | 7% increase                        |
+| Distilled ResNet8 from ResNet18 (DKD)                 | CIFAR10 | 200        | Adam      | 128       | 0.8858   | 0.8769   | 7% increase                        |
 
 ### Ablation Study:
 ##### Alpha - 
